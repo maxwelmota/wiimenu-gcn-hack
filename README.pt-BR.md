@@ -18,7 +18,7 @@
 
 **START não funciona como HOME dentro dos jogos de Wii.** O hack age **somente no Menu do Sistema do Wii**. Ao abrir um jogo de Wii compatível com controle GameCube, o controle volta a operar **normalmente como GameCube Controller**, inclusive com o START tendo sua função comum dentro do jogo. Esta modificação **não** injeta um botão HOME nos jogos, nem modifica suas rotinas internas ou cria um atalho universal para retornar ao Menu do Wii.
 
-Da mesma forma, a existência de dois cursores independentes no **System Menu** não significa suporte simultâneo a dois jogadores em todos os jogos e aplicativos. O Homebrew Channel, USB Loader GX e emuladores utilizam seus próprios sistemas de controle. No teste realizado, o USB Loader GX tratou ambos como P1 dentro da sua interface; em *Tatsunoko vs. Capcom*, o controle GameCube funcionou nativamente, mas o uso simultâneo dos dois dispositivos não foi confirmado.
+Da mesma forma, a existência de dois cursores independentes no **System Menu** não significa suporte simultâneo a dois jogadores em todos os jogos e aplicativos. O Homebrew Channel, USB Loader GX e emuladores utilizam seus próprios sistemas de controle. No teste realizado, o USB Loader GX tratou ambos como P1 dentro da sua interface; No jogo *Tatsunoko vs. Capcom*, o controle GameCube funcionou nativamente, mas o uso simultâneo dos dois dispositivos não é possível (ou um ou outro) pois é o comportamento do próprio jogo.
 
 ## Compatibilidade e status
 
@@ -43,15 +43,15 @@ Na raiz do repositório, há **somente dois arquivos INI para instalação**:
 
 | Arquivo | Uso |
 | --- | --- |
-| [`gcn.ini`](gcn.ini) | **Somente o hack**: acrescentar ao final do seu `hacks_hash.ini`. **Recomendado**, pois preserva os hacks que você já usa. |
+| [`gcn.ini`](gcn.ini) | **Somente o hack**: acrescentar ao final do arquivo `hacks_hash.ini` sem pular linha. **Recomendado**, pois preserva os hacks que você já usa. |
 | [`hacks_hash.ini`](hacks_hash.ini) | **Arquivo completo pré-mesclado**, com uma coleção específica de hacks já existente e a nossa modificação incluída. Não é um substituto universal para qualquer instalação do Priiloader. |
 
 ### Opção 1 — acrescentar o hack (recomendada)
 
 1. Faça backup do seu `sd:/apps/priiloader/hacks_hash.ini`.
 2. Abra esse arquivo em um editor de texto simples.
-3. Garanta uma **quebra de linha** e, de preferência, uma linha em branco separando o último hack antigo do próximo bloco.
-4. Copie **todo** o conteúdo de [`gcn.ini`](gcn.ini) para o final do arquivo. Ele inclui os blocos regionais 4.3U/4.3E/4.3J. Caso você já possua blocos chamados `[GameCube Controller Support]`, **substitua-os** em vez de duplicá-los.
+3. Vá até o final do arquivo na linha do hack antigo.
+4. Copie **todo** o conteúdo de [`gcn.ini`](gcn.ini), colando no final do arquivo. Ele inclui os blocos regionais 4.3U/4.3E/4.3J. Caso você já possua blocos chamados `[GameCube Controller Support]`, **substitua-os** em vez de duplicá-los.
 5. Salve no mesmo caminho, como `hacks_hash.ini` (sem uma extensão `.txt` extra).
 6. Reinicie, entre no Priiloader, abra **System Menu Hacks**, habilite **GameCube Controller Support** e escolha **Save settings**.
 7. Teste com o controle de GameCube conectado à **porta 1**.
