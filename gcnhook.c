@@ -111,6 +111,14 @@ typedef struct State {
 #define GC_LIM_X 1.8f
 #define GC_LIM_Y 1.2f
 #define GC_SPEED 0.05f
+#define WII_MENU_CONTROLLER_SLOTS 4
+
+// Values read from PADRead are signed 8-bit stick positions.
+// Ignore small deviations around neutral to prevent cursor drift.
+#define GC_STICK_DEADZONE 12
+#define GC_PAD_BUTTON_START 0x1000u
+// Wii Menu/KPAD native button bits (not libogc's WPAD_BUTTON_HOME).
+#define WII_KPAD_BUTTON_HOME 0x8000u
 
 static const u16 gcBtnMap[20] = {
     0x0001, 0x0001,
@@ -125,9 +133,10 @@ static const u16 gcBtnMap[20] = {
     0x0020, 0x0010
 };
 
+static __attribute__((noinline)) f32 gcMoveAxis(f32 current, s8 stick, f32 scaledSpeed, f32 axisLimit);
+
 void gcnhook(void) {
-    void** slot0;
-    f32 tmp, lim;
+    void** slots;
     s32 err, i;
     u16 gcRawBtn, btn;
     if (!state.inited) {
@@ -142,12 +151,8 @@ void gcnhook(void) {
     } 
     else if (err == PAD_ERR_NONE) {
         state.present = true;
-        tmp = state.posX + ((f32)state.pad[0].stickX / 128.0f) * GC_SPEED;
-        lim = GC_LIM_X;
-        state.posX = absclamp(&tmp, &lim);
-        tmp = state.posY - ((f32)state.pad[0].stickY / 128.0f) * GC_SPEED;
-        lim = GC_LIM_Y;
-        state.posY = absclamp(&tmp, &lim);
+        state.posX = gcMoveAxis(state.posX, state.pad[0].stickX, GC_SPEED / 128.0f, GC_LIM_X);
+        state.posY = gcMoveAxis(state.posY, state.pad[0].stickY, -GC_SPEED / 128.0f, GC_LIM_Y);
         state.kpad.posx = state.posX;
         state.kpad.posy = state.posY;
         state.kpad.dpd_valid_fg = true;
@@ -159,40 +164,59 @@ void gcnhook(void) {
                 btn |= gcBtnMap[i + 1];
             }
         }
+        // Start on the GameCube pad emulates HOME on the Wii Menu.
+        if (gcRawBtn & GC_PAD_BUTTON_START) {
+            btn |= WII_KPAD_BUTTON_HOME;
+        }
         state.kpad.hold = btn;
         state.kpad.trig = (u32)(btn & ~state.prevBtn);
         state.kpad.release = (u32)(state.prevBtn & ~btn);
         state.prevBtn = btn;
     }
+    // Free only the virtual GameCube slot before the native manager scans
+    // connected Wii Remotes. This lets a newly connected Wii Remote reclaim
+    // its own slot instead of being shadowed by our virtual controller.
+    slots = (void**)manager;
+    if (slots && state.revo.chan < WII_MENU_CONTROLLER_SLOTS &&
+        slots[state.revo.chan] == (void*)&state.revo) {
+        slots[state.revo.chan] = NULL;
+    }
     if (manager) {
         MgrRead(manager);
     }
-    slot0 = (void**)manager;
-    if (state.present) {
-        if (!state.hijacked) {
-            WPADDisconnect(0);
-            state.hijacked = true;
-        }
+    slots = (void**)manager;
+    if (state.present && slots) {
         if (state.revo.vtable == NULL) {
             state.revo.vtable = REVO_VTABLE;
             state.revo.rumbleType = -1;
-            state.revo.chan = 0;
             state.revo.type = 0;
             state.revo.kpad = &state.kpad;
         }
-        if (slot0) {
-            slot0[0] = (void*)&state.revo;
-            RevoRead((void*)&state.revo);
+        // Do not overwrite an actual Wii Remote. Pick the lowest free
+        // controller slot (P1 when alone; usually P2 when Wii Remote is P1).
+        for (i = 0; i < WII_MENU_CONTROLLER_SLOTS; i++) {
+            if (slots[i] == NULL) {
+                state.revo.chan = (u32)i;
+                slots[i] = (void*)&state.revo;
+                RevoRead((void*)&state.revo);
+                break;
+            }
         }
     }
-    else if (state.hijacked) {
-        if (slot0 && slot0[0] == (void*)&state.revo) {
-            slot0[0] = NULL;
-        }
+    if (!state.present) {
         state.kpad.hold = state.kpad.trig = state.kpad.release = 0;
         state.kpad.wpad_err = -1;
         state.kpad.dpd_valid_fg = false;
         state.prevBtn = 0;
-        state.hijacked = false;
     }
 }
+
+static __attribute__((noinline)) f32 gcMoveAxis(f32 current, s8 stick, f32 scaledSpeed, f32 axisLimit) {
+    f32 result;
+    if (stick >= -GC_STICK_DEADZONE && stick <= GC_STICK_DEADZONE) {
+        stick = 0;
+    }
+    result = current + ((f32)stick * scaledSpeed);
+    return absclamp(&result, &axisLimit);
+}
+
