@@ -18,7 +18,7 @@
 
 **START não funciona como HOME dentro dos jogos de Wii.** O hack age **somente no Menu do Sistema do Wii**. Ao abrir um jogo de Wii compatível com controle GameCube, o controle volta a operar **normalmente como GameCube Controller**, inclusive com o START tendo sua função comum dentro do jogo. Esta modificação **não** injeta um botão HOME nos jogos, nem modifica suas rotinas internas ou cria um atalho universal para retornar ao Menu do Wii.
 
-Da mesma forma, a existência de dois cursores independentes no **System Menu** não significa suporte simultâneo a dois jogadores em todos os jogos e aplicativos. O Homebrew Channel, USB Loader GX e emuladores utilizam seus próprios sistemas de controle. No teste realizado, o USB Loader GX tratou ambos como P1 dentro da sua interface; No jogo *Tatsunoko vs. Capcom*, o controle GameCube funcionou nativamente, mas o uso simultâneo dos dois dispositivos não é possível (ou um ou outro) pois é o comportamento do próprio jogo.
+Da mesma forma, a existência de dois cursores independentes no **System Menu** não significa suporte simultâneo a dois jogadores em todos os jogos e aplicativos. O Homebrew Channel, USB Loader GX e emuladores utilizam seus próprios sistemas de controle. No teste realizado, o USB Loader GX tratou ambos como P1 dentro da sua interface; em *Tatsunoko vs. Capcom*, o controle GameCube funcionou nativamente, mas o uso simultâneo dos dois dispositivos não foi confirmado.
 
 ## Compatibilidade e status
 
@@ -43,15 +43,15 @@ Na raiz do repositório, há **somente dois arquivos INI para instalação**:
 
 | Arquivo | Uso |
 | --- | --- |
-| [`gcn.ini`](gcn.ini) | **Somente o hack**: acrescentar ao final do arquivo `hacks_hash.ini` sem pular linha. **Recomendado**, pois preserva os hacks que você já usa. |
+| [`gcn.ini`](gcn.ini) | **Somente o hack**: acrescentar ao final do seu `hacks_hash.ini`. **Recomendado**, pois preserva os hacks que você já usa. |
 | [`hacks_hash.ini`](hacks_hash.ini) | **Arquivo completo pré-mesclado**, com uma coleção específica de hacks já existente e a nossa modificação incluída. Não é um substituto universal para qualquer instalação do Priiloader. |
 
 ### Opção 1 — acrescentar o hack (recomendada)
 
 1. Faça backup do seu `sd:/apps/priiloader/hacks_hash.ini`.
 2. Abra esse arquivo em um editor de texto simples.
-3. Vá até o final do arquivo na linha do hack antigo.
-4. Copie **todo** o conteúdo de [`gcn.ini`](gcn.ini), colando no final do arquivo. Ele inclui os blocos regionais 4.3U/4.3E/4.3J. Caso você já possua blocos chamados `[GameCube Controller Support]`, **substitua-os** em vez de duplicá-los.
+3. Verifique que a última linha do hack anterior termina com uma **quebra de linha** e que `[GameCube Controller Support]` começa **imediatamente na linha seguinte**, sem linha em branco e sem espaços entre os blocos. Se o arquivo já termina com `\n` (uma quebra de linha), não acrescente outra.
+4. Copie **todo** o conteúdo de [`gcn.ini`](gcn.ini) para o final do arquivo. Ele inclui os blocos regionais 4.3U/4.3E/4.3J. Caso você já possua blocos chamados `[GameCube Controller Support]`, **substitua-os** em vez de duplicá-los.
 5. Salve no mesmo caminho, como `hacks_hash.ini` (sem uma extensão `.txt` extra).
 6. Reinicie, entre no Priiloader, abra **System Menu Hacks**, habilite **GameCube Controller Support** e escolha **Save settings**.
 7. Teste com o controle de GameCube conectado à **porta 1**.
@@ -60,7 +60,7 @@ Na raiz do repositório, há **somente dois arquivos INI para instalação**:
 
 Após fazer backup, copie diretamente o [`hacks_hash.ini`](hacks_hash.ini) do repositório para `sd:/apps/priiloader/hacks_hash.ini` e habilite o hack no Priiloader. **Esta opção pode sobrescrever outros hacks pessoais**; por isso recomendamos a Opção 1.
 
-**Se o hack não aparecer:** confira o caminho, a versão regional do Menu do Wii e, principalmente, a **quebra de linha** entre os blocos. Durante os testes, um arquivo com esse espaço entre linhas impediu que o novo hack aparecesse na lista.
+**Se o hack não aparecer:** confira o caminho, a versão regional do Menu do Wii e a separação exata entre os blocos: **uma quebra de linha, sem linha vazia**. Nos testes com este Wii/Priiloader, tanto a ausência da quebra de linha quanto uma linha em branco entre as seções impediram a exibição do hack.
 
 **Se o System Menu falhar:** use o seu procedimento de recuperação (normalmente segurar RESET ao ligar para abrir o Priiloader), desabilite o hack e restaure o backup. Não experimente alterações no Menu do Sistema sem recuperação disponível.
 

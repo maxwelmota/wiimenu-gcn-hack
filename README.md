@@ -39,7 +39,7 @@ Exactly two installable INI files are provided at the project root:
 
 1. Back up `sd:/apps/priiloader/hacks_hash.ini`.
 2. Open your existing `hacks_hash.ini` in a plain-text editor.
-3. Make sure the file ends with a **line break**; add a blank line between the last existing patch and the new section.
+3. Ensure the previous hack ends with **one line break** and `[GameCube Controller Support]` starts **immediately on the next line**. Do **not** add an empty line or spaces between sections. If the file already ends with a newline, do not add another.
 4. Append the full contents of **`gcn.ini`**, without duplicating older `[GameCube Controller Support]` sections. It contains three region-specific sections (U/E/J), which must all remain intact.
 5. Save as `sd:/apps/priiloader/hacks_hash.ini` (plain text; not `.ini.txt`).
 6. Boot Priiloader, open **System Menu Hacks**, enable **GameCube Controller Support**, then **Save settings**.
@@ -49,7 +49,7 @@ Exactly two installable INI files are provided at the project root:
 
 Back up your own `hacks_hash.ini`, then copy the provided **`hacks_hash.ini`** to `sd:/apps/priiloader/hacks_hash.ini`. Activate the hack in Priiloader as above. **This may replace other hacks you already use**, so Option A is preferable for most users.
 
-**Troubleshooting**: if the patch does not appear in the Priiloader list, verify the file path, the Wii System Menu version and **line separation** between INI sections. A missing newline between the previous hack and `[GameCube Controller Support]` was observed to prevent discovery.
+**Troubleshooting**: if the patch does not appear in Priiloader, verify the path, Wii System Menu version, and the exact boundary between INI sections: **one newline, no empty line**. In testing on this Wii/Priiloader setup, both a missing newline and an extra blank line before `[GameCube Controller Support]` prevented the hack from appearing.
 
 If booting the Wii System Menu fails after enabling the hack, use your established Priiloader recovery method (typically hold RESET at startup), disable the hack, and restore your backed-up file. Do not test system menu patches without a way to recover.
 
