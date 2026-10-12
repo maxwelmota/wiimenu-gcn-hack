@@ -60,7 +60,7 @@ Na raiz do repositório, há **somente dois arquivos INI para instalação**:
 
 Após fazer backup, copie diretamente o [`hacks_hash.ini`](hacks_hash.ini) do repositório para `sd:/apps/priiloader/hacks_hash.ini` e habilite o hack no Priiloader. **Esta opção pode sobrescrever outros hacks pessoais**; por isso recomendamos a Opção 1.
 
-**Se o hack não aparecer:** confira o caminho, a versão regional do Menu do Wii e, principalmente, a **quebra de linha** entre os blocos. Durante os testes, um arquivo sem essa separação impediu que o novo hack aparecesse na lista.
+**Se o hack não aparecer:** confira o caminho, a versão regional do Menu do Wii e, principalmente, a **quebra de linha** entre os blocos. Durante os testes, um arquivo com esse espaço entre linhas impediu que o novo hack aparecesse na lista.
 
 **Se o System Menu falhar:** use o seu procedimento de recuperação (normalmente segurar RESET ao ligar para abrir o Priiloader), desabilite o hack e restaure o backup. Não experimente alterações no Menu do Sistema sem recuperação disponível.
 
